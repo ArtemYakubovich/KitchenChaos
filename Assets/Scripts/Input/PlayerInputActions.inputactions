@@ -13,6 +13,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "e3662f0c-8651-4763-9027-726416746418",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -182,7 +191,7 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "Gamepad RIght stick",
+                    "name": "Gamepad Left Stick",
                     "id": "37746666-364d-49b0-a496-0b5fd75a9e28",
                     "path": "2DVector",
                     "interactions": "",
@@ -235,6 +244,28 @@
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "2ea78143-fdb7-4ea2-8555-57811276a2e6",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "07244d5e-2b1a-47c5-89d9-a4ed31da8edf",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
