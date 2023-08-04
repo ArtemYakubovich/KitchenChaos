@@ -2,9 +2,18 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class StoveCounter : BaseCounter
+public class StoveCounter : BaseCounter, IHasProgress
 {
-    private enum State
+    public event EventHandler<IHasProgress.OnProgressChangedEventArgs> OnProgressChanged;
+
+    public event EventHandler<OnStateChangedEventArgs> OnStateChanged;
+    
+    public class  OnStateChangedEventArgs : EventArgs
+    {
+        public State state;
+    }
+    
+    public enum State
     {
         Idle,
         Frying,
@@ -37,6 +46,11 @@ public class StoveCounter : BaseCounter
                     break;
                 case State.Frying:
                     _fryingTimer += Time.deltaTime;
+                    
+                    OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
+                    {
+                        progressNormolized = _fryingTimer / _fryingRecipeSO.fryingTimerMax
+                    });
             
                     if (_fryingTimer > _fryingRecipeSO.fryingTimerMax)
                     {
@@ -47,23 +61,41 @@ public class StoveCounter : BaseCounter
                         _state = State.Fried;
                         _burningTimer = 0f;
                         _burningRecipeSO = GetBurningRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
+                        
+                        OnStateChanged?.Invoke(this, new OnStateChangedEventArgs
+                        {
+                            state = _state
+                        });
                     }
                     break;
                 case State.Fried:
                     _burningTimer += Time.deltaTime;
+                    
+                    OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
+                    {
+                        progressNormolized = _burningTimer / _burningRecipeSO.burningTimerMax
+                    });
             
                     if (_burningTimer > _burningRecipeSO.burningTimerMax)
                     {
                         GetKitchenObject().DestroySelf();
                         KitchenObject.SpawnKitchenObject(_burningRecipeSO.Output, this);
                         _state = State.Burned;
+                        
+                        OnStateChanged?.Invoke(this, new OnStateChangedEventArgs
+                        {
+                            state = _state
+                        });
+                        
+                        OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
+                        {
+                            progressNormolized = 0f
+                        });
                     }
                     break;
                 case State.Burned:
                     break;
             }
-            
-            print(_state);
         }
     }
 
@@ -81,6 +113,16 @@ public class StoveCounter : BaseCounter
 
                     _state = State.Frying;
                     _fryingTimer = 0f;
+                    
+                    OnStateChanged?.Invoke(this, new OnStateChangedEventArgs
+                    {
+                        state = _state
+                    });
+                    
+                    OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
+                    {
+                        progressNormolized = _fryingTimer / _fryingRecipeSO.fryingTimerMax
+                    });
                 }
             }
             else
@@ -97,6 +139,18 @@ public class StoveCounter : BaseCounter
             else
             {
                 GetKitchenObject().SetKitchenObjectParent(player);
+                
+                _state = State.Idle;
+                
+                OnStateChanged?.Invoke(this, new OnStateChangedEventArgs
+                {
+                    state = _state
+                });
+                
+                OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
+                {
+                    progressNormolized = 0f
+                });
             }
         }
     }
