@@ -38,6 +38,7 @@ public class PlateKitchenObject : KitchenObject
             {
                 kitchenObjectSO = kitchenObjectSO
             });
+
             return true;
         }
     }
