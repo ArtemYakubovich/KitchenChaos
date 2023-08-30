@@ -5,7 +5,9 @@ using UnityEngine;
 public class DeliveryManager : MonoBehaviour
 {
     public event EventHandler OnRecipeSpawned;
-    public event EventHandler OnRecipeComleted;
+    public event EventHandler OnRecipeCompleted;
+    public event EventHandler OnRecipeSuccess;
+    public event EventHandler OnRecipeFailed;
     public static DeliveryManager Instance { get; private set; }
     [SerializeField] private RecipeListSO _recipeListSO;
     
@@ -13,6 +15,7 @@ public class DeliveryManager : MonoBehaviour
     private float _spawnRecipeTimer;
     private float _spawnRecipeTimerMax = 4f;
     private int _waitingRecipeMax = 4;
+    
     private void Awake()
     {
         Instance = this;
@@ -70,11 +73,14 @@ public class DeliveryManager : MonoBehaviour
                 {
                     _waitingRecipeSOList.RemoveAt(i);
                     
-                    OnRecipeComleted?.Invoke(this, EventArgs.Empty);
+                    OnRecipeCompleted?.Invoke(this, EventArgs.Empty);
+                    OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
                     return;
                 }
             }
         }
+        
+        OnRecipeFailed?.Invoke(this, EventArgs.Empty);
     }
 
     public List<RecipeSO> GetWaitingRecipeSOList()
