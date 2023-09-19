@@ -1,5 +1,3 @@
-using System;
-
 public class DeliveryCounter : BaseCounter
 {
     public static DeliveryCounter Instance { get; private set; }
